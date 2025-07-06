@@ -1,0 +1,2 @@
+# Ignore the WASM files generated while using the Nix Dev Shell
+wasm/

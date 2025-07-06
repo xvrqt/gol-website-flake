@@ -1,0 +1,7 @@
+/target
+**/*.rs.bk
+bin/
+pkg/
+wasm-pack.log
+# Needed for Nix Flake to import dependencies
+#Cargo.lock

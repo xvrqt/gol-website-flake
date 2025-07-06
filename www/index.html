@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Title and Description -->
+    <title>Game of Life</title>
+    <meta name="description" content="Rust + WASM Demo" />
+    <meta name="author" content="xvrqt" />
+
+    <!-- Meta -->
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="theme-color" content="#111" />
+
+    <!-- Icons -->
+    <link rel="icon" href="/icons/favicon.ico" type="image/x-icon" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/icons/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/icons/favicon-16x16.png"
+    />
+    <link rel="shortcut icon" href="/icons/favicon.ico" type="image/x-icon" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/icons/apple-touch-icon.png"
+    />
+
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Our single style sheet -->
+    <link rel="stylesheet" href="/styles.css" />
+
+    <!-- 
+        Test if WebGL is enabled, if so:
+        Import the WASM to run our WebGL canvas
+    -->
+    <script>
+      window.addEventListener("load", () => {
+        const c = document.createElement("canvas");
+        const test = c.getContext("webgl2");
+        if (test instanceof WebGL2RenderingContext) {
+          let head = document.getElementsByTagName("head")[0];
+          let js = document.createElement("Script");
+          js.type = "module";
+          js.src = "index.js";
+          head.appendChild(js);
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+  </body>
+</html>
