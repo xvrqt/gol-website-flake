@@ -16,7 +16,7 @@ default = ["console_error_panic_hook"]
 
 [dependencies]
 js-sys = "~0.3.60"
-wasm-bindgen = "=0.2.92"
+wasm-bindgen = "=0.2.100"
 wasm-bindgen-cli = "~0.2.90"
 wasm-bindgen-test = "~0.3.40"
 # The `console_error_panic_hook` crate provides better debugging of panics by
