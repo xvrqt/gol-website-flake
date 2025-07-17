@@ -10,20 +10,21 @@
     };
   };
 
-  outputs = {
-    nixpkgs,
-    flake-utils,
-    rust-overlay,
-    ...
-  }:
+  outputs =
+    { nixpkgs
+    , flake-utils
+    , rust-overlay
+    , ...
+    }:
     flake-utils.lib.eachDefaultSystem (
-      system: let
+      system:
+      let
         pkgName = "game-of-life";
         # Used to ensure we build our Rust packages with Nightly
         rustToolchainFile = ./rust-toolchain.toml;
         rustToolchainSettings = {
-          extensions = ["rust-src"];
-          targets = ["wasm32-unknown-unknown"];
+          extensions = [ "rust-src" ];
+          targets = [ "wasm32-unknown-unknown" ];
         };
         rustToolchain.default = final: _: {
           rustToolchain =
@@ -50,43 +51,47 @@
           pkgs.llvmPackages.bintools
         ];
       in
-        with pkgs; rec {
-          ##############
-          ## PACKAGES ##
-          ##############
-          packages = let
+      rec {
+        ##############
+        ## PACKAGES ##
+        ##############
+        packages =
+          let
             # Compiles the WASM code used by the website, and the JS Bindings
-            wasm = (pkgs.callPackage (./. + "/${wasm_dir}") {inherit pkgs buildInputs;}).default;
+            wasm = (pkgs.callPackage (./. + "/${wasm_dir}") { inherit pkgs buildInputs; }).default;
             # Simple copy of the website source into the Nix Store
-            website = (pkgs.callPackage (./. + "/${web_dir}") {inherit pkgs;}).default;
-          in {
+            website = (pkgs.callPackage (./. + "/${web_dir}") { inherit pkgs; }).default;
+          in
+          {
             inherit wasm website;
             # Combine them into a single Nix Store path
             all = pkgs.symlinkJoin {
               name = "gol_website";
-              paths = [wasm website];
+              paths = [ wasm website ];
             };
             default = packages.all;
           };
 
-          ############
-          ## SHELLS ##
-          ############
-          devShells = import ./shell.nix {inherit pkgs web_dir wasm_dir buildInputs;};
+        ############
+        ## SHELLS ##
+        ############
+        devShells = import ./shell.nix { inherit pkgs web_dir wasm_dir buildInputs; };
 
-          #############
-          ## MODULES ##
-          #############
-          nixosModules.default = {
-            lib,
-            config,
-            ...
-          }: let
+        #############
+        ## MODULES ##
+        #############
+        nixosModules.default =
+          { lib
+          , config
+          , ...
+          }:
+          let
             # Check if both the website service is enabled, and this specific site is enabled.
             cfgcheck = config.services.websites.enable && config.services.websites.sites.${pkgName}.enable;
             # Website url
             domain = config.services.websites.sites.${pkgName}.domain;
-          in {
+          in
+          {
             # Create the option to enable this site, and set its domain name
             options = {
               services = {
@@ -108,7 +113,7 @@
 
             config = {
               # Add the website to the system's packages
-              environment.systemPackages = [packages.default];
+              environment.systemPackages = [ packages.default ];
 
               # Configure a virtual host on nginx
               services.nginx.virtualHosts.${domain} = lib.mkIf cfgcheck {
@@ -121,6 +126,6 @@
               };
             };
           };
-        }
+      }
     );
 }
